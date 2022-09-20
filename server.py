@@ -1,15 +1,22 @@
-import SimpleHTTPServer
-import SocketServer
+from http.server import SimpleHTTPRequestHandler, HTTPServer
 
 PORT = 8888
 
-class Handler(SimpleHTTPServer.SimpleHTTPRequestHandler):
+class Handler(SimpleHTTPRequestHandler):
     pass
 
 Handler.extensions_map['.wasm'] = 'application/wasm'
 
-httpd = SocketServer.TCPServer(("", PORT), Handler)
+httpd = HTTPServer(("", PORT), Handler)
+print("Server started http://%s:%s" % ("", PORT))
 
-print "serving at port", PORT
-httpd.serve_forever()
 
+# httpd = SocketServer.TCPServer(("", PORT), Handler)
+
+try:
+    httpd.serve_forever()
+except KeyboardInterrupt:
+    pass
+
+httpd.server_close()
+print("Server stopped")
